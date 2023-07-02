@@ -8,6 +8,7 @@ use Validator;
 use Redirect;
 use View;
 use Image;
+use Imagick;
 
 class UploadController extends Controller {
 
@@ -33,18 +34,41 @@ class UploadController extends Controller {
 
         
         // this is gd upload and resize
-        $file = $request->file('image');
-		$fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move('uploads/original/', $fileName); 
+        // $file = $request->file('image');
+		// $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        // $file->move('uploads/original/', $fileName); 
 
-        $originalImagePath = public_path('uploads/original/' . $fileName);
-        $resizedImage = Image::make($originalImagePath)->resize(800, 600);
+        // $originalImagePath = public_path('uploads/original/' . $fileName);
+        // $resizedImage = Image::make($originalImagePath)->resize(800, 600);
 
-        // Resize the image
-        $resizedImagePath = public_path('uploads/resized/' . $fileName);
-        // Save the resized image
-        $resizedImage->save($resizedImagePath);
+        // // Resize the image
+        // $resizedImagePath = public_path('uploads/resized/' . $fileName);
+        // // Save the resized image
+        // $resizedImage->save($resizedImagePath);
         // end gd upload and resize
+
+
+
+        // this is purely imagick upload
+        $file = $request->file('image');
+		$fileName = time() . '_' . uniqid();
+        $file->move('uploads/original/', $fileName.'.'.$file->getClientOriginalExtension()); 
+        $originalImagePath = public_path('uploads/original/' . $fileName.'.'.$file->getClientOriginalExtension());
+
+        $imagick = new Imagick($originalImagePath);
+        $imagick->resizeImage(800, 600, Imagick::FILTER_LANCZOS, 1);
+
+        // Save the resized image
+        $resizedImagePath =  public_path('uploads/resized/' . $fileName.'.jpg');
+        $imagick->setImageFormat('jpg');
+        $imagick->writeImage($resizedImagePath);
+
+        // Clean up resources
+        $imagick->clear();
+        $imagick->destroy();
+
+        // end is purely imagick upload
+
 
 
 		echo 'Image Uploaded Successfully';

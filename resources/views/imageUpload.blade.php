@@ -8,6 +8,7 @@
 	<div class="container">
 		<div class="content">
 			<h1>File Upload</h1>
+            <img src="{{url('/uploads/resized/1688303904_64a17920b3fc3.heic')}}" alt="Image" heigh="100" width="100" />
 			<form action="{{ URL::to('upload') }}" method="post" enctype="multipart/form-data">
 				<label>Select image to upload:</label>
 				<input type="hidden" value="{{ csrf_token() }}" name="_token">
