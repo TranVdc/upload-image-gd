@@ -11,6 +11,16 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+  
+use App\Http\Controllers\ImageUploadController;
+  
+// for image upload view
+Route::get('upload', 'UploadController@view');
+// for image upload
+Route::post('upload', 'UploadController@upload');
+
+
 Route::get('/', function () {
     return view('welcome');
 });
